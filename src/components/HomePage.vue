@@ -9,21 +9,21 @@
           <div
             class="rounded-full border-solid border border-neutral-50 flex gap-9 ml-12 pl-4 pr-4 pt-1 pb-1"
           >
-            <button v-on:click="getCategory('.PopularTVShows')">
+            <button v-on:click="getCategory('PopularTVShows')">
               On TV Show
             </button>
-            <button v-on:click="getCategory('.TopRatedMovies')">
+            <button v-on:click="getCategory('TopRatedMovies')">
               Top Rated Movies
             </button>
-            <button v-on:click="getCategory('.TopRatedTVShows')">
+            <button v-on:click="getCategory('TopRatedTVShows')">
               Top Rated TV Shows
             </button>
           </div>
         </div>
-        <PopularMovies class="category PopularMovies" />
-        <PopularTVShows class="category PopularTVShows hidden" />
-        <TopRatedMovies class="category TopRatedMovies hidden" />
-        <TopRatedTVShows class="category TopRatedTVShows hidden" />
+        <ItemCategories
+          :key="selectedCategory"
+          :categoryConfig="categoryConfigs[selectedCategory]"
+        />
       </div>
     </div>
   </div>
@@ -32,21 +32,23 @@
 <script>
 import Navbar from "./header/NavbarSide";
 import Searchbar from "./header/SearchBar";
-import PopularMovies from "./itemCategories/PopularMovies";
-import PopularTVShows from "./itemCategories/PopularTVShows";
-import TopRatedMovies from "./itemCategories/TopRatedMovies";
-import TopRatedTVShows from "./itemCategories/TopRatedTVShows";
+import ItemCategories from "./ItemCategories.vue";
 
 export default {
+  data() {
+    return {
+      selectedCategory: "PopularMovies",
+      categoryConfigs: {
+        PopularMovies: { endpoint: "/movie/popular" },
+        PopularTVShows: { endpoint: "/tv/popular" },
+        TopRatedMovies: { endpoint: "/movie/top_rated" },
+        TopRatedTVShows: { endpoint: "/tv/top_rated" },
+      },
+    };
+  },
   methods: {
-    getCategory(categorySelector) {
-      const $category = document.querySelector(categorySelector);
-
-      document.querySelectorAll(".category").forEach((category) => {
-        category.classList.add("hidden");
-      });
-
-      $category.classList.remove("hidden");
+    getCategory(category) {
+      this.selectedCategory = category;
     },
   },
   computed: {},
@@ -54,10 +56,7 @@ export default {
   components: {
     Navbar,
     Searchbar,
-    PopularMovies,
-    PopularTVShows,
-    TopRatedMovies,
-    TopRatedTVShows,
+    ItemCategories,
   },
 };
 </script>

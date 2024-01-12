@@ -7,9 +7,15 @@
 </template>
 
 <script>
-import MovieItem from "../items/MovieItem";
+import MovieItem from "./MovieItem";
 
 export default {
+  props: {
+    categoryConfig: {
+      type: Object,
+      required: true,
+    },
+  },
   components: {
     MovieItem,
   },
@@ -20,7 +26,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await window.$http.get("/movie/top_rated");
+      const response = await window.$http.get(this.categoryConfig.endpoint);
 
       this.movies = response.data.results.slice(0, 5);
     } catch (error) {
